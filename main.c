@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     glutInitWindowSize(width, height);
 
     // Cria a janela passando como argumento o titulo da mesma
-    glutCreateWindow("Quebra-Cabeca digital");
+    glutCreateWindow("Alquimia Digital");
 
     // Registra a funcao callback de redesenho da janela de visualizacao
     glutDisplayFunc(draw);
@@ -118,10 +118,10 @@ int main(int argc, char *argv[])
 
     printf("Processando...\n");
 
-    // Copia imagem de origem na imagem de saída
+    // Copia imagem de destino na imagem de saída
     // (NUNCA ALTERAR AS IMAGENS DE ORIGEM E DESEJADA)
-    int tam = pic[ORIGEM].width * pic[ORIGEM].height;
-    memcpy(pic[SAIDA].pixels, pic[ORIGEM].pixels, sizeof(RGBpixel) * tam);
+    int tam = pic[DESEJ].width * pic[DESEJ].height;
+    memcpy(pic[SAIDA].pixels, pic[DESEJ].pixels, sizeof(RGBpixel) * tam);
 
     //
     // Neste ponto, voce deve implementar o algoritmo!
