@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h> // Para usar strings
 #include <time.h>
+#include <math.h>
 
 #ifdef WIN32
 #include <windows.h> // inclui apenas no Windows
@@ -34,6 +35,7 @@ typedef struct
 void load(char *name, Img *pic);
 void valida();
 int cmp(const void *elem1, const void *elem2);
+//double distanciaCores(RGBpixel pixel1, RGBpixel pixel2);
 
 // Funções da interface gráfica e OpenGL
 void init();
@@ -135,11 +137,41 @@ int main(int argc, char *argv[])
     /**/
     for (int i = 0; i < tam; i++)
     {
-        pic[SAIDA].pixels[i].r = 255 - pic[SAIDA].pixels[i].r;
-        pic[SAIDA].pixels[i].g = 255 - pic[SAIDA].pixels[i].g;
-        pic[SAIDA].pixels[i].b = 255 - pic[SAIDA].pixels[i].b;
+        pic[SAIDA].pixels[i].r = pic[ORIGEM].pixels[i].r;
+        pic[SAIDA].pixels[i].g = pic[ORIGEM].pixels[i].g;
+        pic[SAIDA].pixels[i].b = pic[ORIGEM].pixels[i].b;
     }
     /**/
+
+    // float menorAtual = 300.0;
+    // int pixelCoord = 0;
+    // int posicaoSorteada = 0;
+    // RGBpixel auxiliar;
+
+    // for (int i = 0; i < 100000; i++){
+
+    //     srand(time(NULL));
+
+    //     posicaoSorteada = rand() % (tam + 1);
+
+    //     for (int j = 0; j < tam; j++){
+
+    //         float menor = distanciaCores(pic[DESEJ].pixels[posicaoSorteada], pic[SAIDA].pixels[j]);
+
+    //         if(menor < menorAtual){
+    //             menorAtual = menor;
+    //             pixelCoord = j;
+    //         }
+
+    //     }
+
+    //     auxiliar = pic[SAIDA].pixels[posicaoSorteada];
+    //     pic[SAIDA].pixels[posicaoSorteada] = pic[SAIDA].pixels[pixelCoord];
+    //     pic[SAIDA].pixels[pixelCoord] = auxiliar;
+
+
+    // }
+    
 
     // NÃO ALTERAR A PARTIR DAQUI!
 
@@ -151,6 +183,14 @@ int main(int argc, char *argv[])
     // Entra no loop de eventos, não retorna
     glutMainLoop();
 }
+
+// Quanto menor o valor retornado, mais iguais são as cores
+// double distanciaCores(RGBpixel pixel1, RGBpixel pixel2) {
+//     int dr = pixel1.r - pixel2.r;
+//     int dg = pixel1.g - pixel2.g;
+//     int db = pixel1.b - pixel2.b;
+//     return sqrt(0.299 * dr * dr + 0.587 * dg * dg + 0.114 * db * db);
+// }
 
 // Carrega uma imagem para a struct Img
 void load(char *name, Img *pic)
