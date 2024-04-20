@@ -1,6 +1,8 @@
 {
     "files.associations": {
-        "math.h": "c"
+        "math.h": "c",
+        "glut.h": "c",
+        "freeglut.h": "c"
     },
     "cmake.configureOnOpen": false
 }
