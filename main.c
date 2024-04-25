@@ -35,7 +35,7 @@ typedef struct
 void load(char *name, Img *pic);
 void valida();
 int cmp(const void *elem1, const void *elem2);
-double distanciaCores(RGBpixel pixel1, RGBpixel pixel2);
+double distanciaCores(RGBpixel* pixel1, RGBpixel* pixel2);
 
 // Funções da interface gráfica e OpenGL
 void init();
@@ -123,9 +123,8 @@ int main(int argc, char *argv[])
     // Copia imagem de destino na imagem de saída
     // (NUNCA ALTERAR AS IMAGENS DE ORIGEM E DESEJADA)
     int tam = pic[DESEJ].width * pic[DESEJ].height;
-    memcpy(pic[SAIDA].pixels, pic[DESEJ].pixels, sizeof(RGBpixel) * tam);
+    memcpy(pic[SAIDA].pixels, pic[ORIGEM].pixels, sizeof(RGBpixel) * tam);
 
-    //
     // Neste ponto, voce deve implementar o algoritmo!
     // (ou chamar funcoes para fazer isso)
     //
@@ -133,38 +132,29 @@ int main(int argc, char *argv[])
     // ...
     // ...
     //
-    // Exemplo de manipulação: inverte as cores na imagem de saída
-    /**/
-    for (int i = 0; i < tam; i++)
-    {
-        pic[SAIDA].pixels[i].r = pic[ORIGEM].pixels[i].r;
-        pic[SAIDA].pixels[i].g = pic[ORIGEM].pixels[i].g;
-        pic[SAIDA].pixels[i].b = pic[ORIGEM].pixels[i].b;
-    }
-    /**/
 
-    float menorAtual = 300.0;
     int posicaoSorteada = 0;
     int segundaPosicaoSorteada = 0;
     RGBpixel auxiliar;
-    srand(time(NULL));
+    int controledetentativas = 0;
 
-    for (int i = 0; i < 150000000; i++){
+    while(controledetentativas <= 10000){
 
-        posicaoSorteada = (rand()*rand()) % (tam + 1);
-        segundaPosicaoSorteada = (rand()*rand()) % (tam + 1);
+        posicaoSorteada = (rand()*rand()) % tam;
+        segundaPosicaoSorteada = (rand()*rand()) % tam;
 
-        float distanciaOriginal = distanciaCores(pic[DESEJ].pixels[posicaoSorteada], pic[SAIDA].pixels[posicaoSorteada]);
-        float distanciaTroca = distanciaCores(pic[DESEJ].pixels[posicaoSorteada], pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaOriginalNovo = distanciaCores(pic[DESEJ].pixels[segundaPosicaoSorteada], pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaNovo = distanciaCores(pic[DESEJ].pixels[segundaPosicaoSorteada], pic[SAIDA].pixels[posicaoSorteada]);
+        float distanciaOriginal = distanciaCores(&pic[DESEJ].pixels[posicaoSorteada], &pic[SAIDA].pixels[posicaoSorteada]);
+        float distanciaTroca = distanciaCores(&pic[DESEJ].pixels[posicaoSorteada], &pic[SAIDA].pixels[segundaPosicaoSorteada]);
+        float distanciaOriginalNovo = distanciaCores(&pic[DESEJ].pixels[segundaPosicaoSorteada], &pic[SAIDA].pixels[segundaPosicaoSorteada]);
+        float distanciaNovo = distanciaCores(&pic[DESEJ].pixels[segundaPosicaoSorteada], &pic[SAIDA].pixels[posicaoSorteada]);
 
         if(distanciaTroca < distanciaOriginal && distanciaNovo < distanciaOriginalNovo){
             auxiliar = pic[SAIDA].pixels[posicaoSorteada];
             pic[SAIDA].pixels[posicaoSorteada] = pic[SAIDA].pixels[segundaPosicaoSorteada];
             pic[SAIDA].pixels[segundaPosicaoSorteada] = auxiliar;
+            controledetentativas = 0;
         }
-
+        controledetentativas++;
     }
     
 
@@ -180,10 +170,10 @@ int main(int argc, char *argv[])
 }
 
 // Quanto menor o valor retornado, mais iguais são as cores
-double distanciaCores(RGBpixel pixel1, RGBpixel pixel2) {
-    int dr = pixel1.r - pixel2.r;
-    int dg = pixel1.g - pixel2.g;
-    int db = pixel1.b - pixel2.b;
+double distanciaCores(RGBpixel* pixel1, RGBpixel* pixel2) {
+    int dr = pixel1->r - pixel2->r;
+    int dg = pixel1->g - pixel2->g;
+    int db = pixel1->b - pixel2->b;
     return sqrt(0.299 * dr * dr + 0.587 * dg * dg + 0.114 * db * db);
 }
 
