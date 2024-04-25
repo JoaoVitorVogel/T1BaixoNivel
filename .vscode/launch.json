@@ -10,8 +10,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/alchemy",
             "args": [
-                "dali1.jpg",
-                "dali2.jpg"
+                "mona_lisa.jpg",
+                "persistence_of_memory.jpg"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

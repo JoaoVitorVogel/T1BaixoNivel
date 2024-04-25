@@ -144,25 +144,27 @@ int main(int argc, char *argv[])
     /**/
 
     float menorAtual = 300.0;
+    int pixelCoord = 0;
     int posicaoSorteada = 0;
     int segundaPosicaoSorteada = 0;
     RGBpixel auxiliar;
+
     srand(time(NULL));
+    for (int i = 0; i < 100000; i++){
 
-    for (int i = 0; i < 150000000; i++){
-
-        posicaoSorteada = (rand()*rand()) % (tam + 1);
-        segundaPosicaoSorteada = (rand()*rand()) % (tam + 1);
-
-        float distanciaOriginal = distanciaCores(pic[DESEJ].pixels[posicaoSorteada], pic[SAIDA].pixels[posicaoSorteada]);
-        float distanciaTroca = distanciaCores(pic[DESEJ].pixels[posicaoSorteada], pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaOriginalNovo = distanciaCores(pic[DESEJ].pixels[segundaPosicaoSorteada], pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaNovo = distanciaCores(pic[DESEJ].pixels[segundaPosicaoSorteada], pic[SAIDA].pixels[posicaoSorteada]);
-
-        if(distanciaTroca < distanciaOriginal && distanciaNovo < distanciaOriginalNovo){
-            auxiliar = pic[SAIDA].pixels[posicaoSorteada];
-            pic[SAIDA].pixels[posicaoSorteada] = pic[SAIDA].pixels[segundaPosicaoSorteada];
-            pic[SAIDA].pixels[segundaPosicaoSorteada] = auxiliar;
+        posicaoSorteada = rand() % (tam + 1);
+        
+        for (int  j = posicaoSorteada; j < tam; j++)
+        {
+            if (posicaoSorteada < menorAtual){
+                menorAtual = posicaoSorteada;
+            }
+            if (menorAtual <= 50.0){
+                auxiliar = pic[SAIDA].pixels[posicaoSorteada];
+                pic[SAIDA].pixels[posicaoSorteada] = pic[SAIDA].pixels[segundaPosicaoSorteada];
+                pic[SAIDA].pixels[segundaPosicaoSorteada] = auxiliar;
+                break;
+            }
         }
 
     }
