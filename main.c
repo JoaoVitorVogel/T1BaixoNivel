@@ -35,7 +35,7 @@ typedef struct
 void load(char *name, Img *pic);
 void valida();
 int cmp(const void *elem1, const void *elem2);
-double distanciaCores(RGBpixel* pixel1, RGBpixel* pixel2);
+double comparador(RGBpixel* pixel1, RGBpixel* pixel2);
 
 // Funções da interface gráfica e OpenGL
 void init();
@@ -127,39 +127,44 @@ int main(int argc, char *argv[])
 
     // Neste ponto, voce deve implementar o algoritmo!
     // (ou chamar funcoes para fazer isso)
-    //
-    // Aplica o algoritmo e gera a saida em pic[SAIDA].pixels...
-    // ...
-    // ...
-    //
 
-    int posicaoSorteada = 0;
-    int segundaPosicaoSorteada = 0;
-    RGBpixel auxiliar;
+
+    // Variaveis usadas para pegar posições aleatórias
+    int pixelum = 0;
+    int pixeldois = 0;
     int controledetentativas = 0;
+   
+    //Variaveis que controlam se vale apena a troca para o pixelum
+    double distanciapixelum = 0.0;
+    double trocaum = 0.0;
 
-    while(controledetentativas <= 10000){
+    //Variaveis que controlam se vale apena a troca para o pixeldois
+    double distanciapixeldois = 0.0;
+    double trocadois = 0.0;
 
-        posicaoSorteada = (rand()*rand()) % tam;
-        segundaPosicaoSorteada = (rand()*rand()) % tam;
-
-        float distanciaOriginal = distanciaCores(&pic[DESEJ].pixels[posicaoSorteada], &pic[SAIDA].pixels[posicaoSorteada]);
-        float distanciaTroca = distanciaCores(&pic[DESEJ].pixels[posicaoSorteada], &pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaOriginalNovo = distanciaCores(&pic[DESEJ].pixels[segundaPosicaoSorteada], &pic[SAIDA].pixels[segundaPosicaoSorteada]);
-        float distanciaNovo = distanciaCores(&pic[DESEJ].pixels[segundaPosicaoSorteada], &pic[SAIDA].pixels[posicaoSorteada]);
-
-        if(distanciaTroca < distanciaOriginal && distanciaNovo < distanciaOriginalNovo){
-            auxiliar = pic[SAIDA].pixels[posicaoSorteada];
-            pic[SAIDA].pixels[posicaoSorteada] = pic[SAIDA].pixels[segundaPosicaoSorteada];
-            pic[SAIDA].pixels[segundaPosicaoSorteada] = auxiliar;
-            controledetentativas = 0;
+    RGBpixel auxiliar;
+    
+    while(controledetentativas <= 10000){       //Enquanto não tivermos 10000 tentativas sem trocar pixels, ele continua
+        pixelum = (rand()*rand()) % tam;        //Pixel aleátorio 1
+        pixeldois = (rand()*rand()) % tam;      //Pixel aleátorio 1
+       
+        distanciapixelum = comparador(&pic[DESEJ].pixels[pixelum], &pic[SAIDA].pixels[pixelum]);    //Calcula a distancia em cores entre os pixeis
+        trocaum = comparador(&pic[DESEJ].pixels[pixelum], &pic[SAIDA].pixels[pixeldois]);           //Calcula a distancia em cores entre os pixeis
+       
+        distanciapixeldois = comparador(&pic[DESEJ].pixels[pixeldois], &pic[SAIDA].pixels[pixeldois]);  //Calcula a distancia em cores entre os pixeis
+        trocadois = comparador(&pic[DESEJ].pixels[pixeldois], &pic[SAIDA].pixels[pixelum]);             //Calcula a distancia em cores entre os pixeis
+    
+        if(trocaum < distanciapixelum && trocadois < distanciapixeldois){   //Se a troca vale apena para ambos os pixels, troca
+            auxiliar = pic[SAIDA].pixels[pixelum];
+            pic[SAIDA].pixels[pixelum] = pic[SAIDA].pixels[pixeldois];
+            pic[SAIDA].pixels[pixeldois] = auxiliar;
+            controledetentativas = 0;               //Se conseguimos fazer a troca, zera a quantidade de tentativas
         }
-        controledetentativas++;
+        controledetentativas++;         //Adiciona mais um tentativa
     }
     
 
     // NÃO ALTERAR A PARTIR DAQUI!
-
     // Cria textura para a imagem de saída
     tex[SAIDA] = SOIL_create_OGL_texture((unsigned char *)pic[SAIDA].pixels, pic[SAIDA].width, pic[SAIDA].height, SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
     // Grava imagem de saída em out.bmp, para conferência
@@ -170,11 +175,11 @@ int main(int argc, char *argv[])
 }
 
 // Quanto menor o valor retornado, mais iguais são as cores
-double distanciaCores(RGBpixel* pixel1, RGBpixel* pixel2) {
+double comparador(RGBpixel* pixel1, RGBpixel* pixel2) {
     int dr = pixel1->r - pixel2->r;
     int dg = pixel1->g - pixel2->g;
     int db = pixel1->b - pixel2->b;
-    return sqrt(0.299 * dr * dr + 0.587 * dg * dg + 0.114 * db * db);
+    return sqrt((0.299 * (dr * dr)) + (0.587 * (dg * dg)) + (0.114 * (db * db)));   //Utiliza a gray scale para comparar as cores
 }
 
 // Carrega uma imagem para a struct Img
