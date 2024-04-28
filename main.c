@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     
     while(controledetentativas <= 10000){       //Enquanto não tivermos 10000 tentativas sem trocar pixels, ele continua
         pixelum = (rand()*rand()) % tam;        //Pixel aleátorio 1
-        pixeldois = (rand()*rand()) % tam;      //Pixel aleátorio 1
+        pixeldois = (rand()*rand()) % tam;      //Pixel aleátorio 2
        
         distanciapixelum = comparador(&pic[DESEJ].pixels[pixelum], &pic[SAIDA].pixels[pixelum]);    //Calcula a distancia em cores entre os pixeis
         trocaum = comparador(&pic[DESEJ].pixels[pixelum], &pic[SAIDA].pixels[pixeldois]);           //Calcula a distancia em cores entre os pixeis
@@ -179,7 +179,7 @@ double comparador(RGBpixel* pixel1, RGBpixel* pixel2) {
     int dr = pixel1->r - pixel2->r;
     int dg = pixel1->g - pixel2->g;
     int db = pixel1->b - pixel2->b;
-    return sqrt((0.299 * (dr * dr)) + (0.587 * (dg * dg)) + (0.114 * (db * db)));   //Utiliza a gray scale para comparar as cores
+    return sqrt((0.299 * (dr * dr)) + (0.587 * (dg * dg)) + (0.114 * (db * db)));  
 }
 
 // Carrega uma imagem para a struct Img
